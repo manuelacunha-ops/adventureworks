@@ -3,8 +3,8 @@ with source as (
 )
 
 select
-    salesreasonid,
-    name as reason_name,
-    reasontype,
-    modifieddate
+    cast(salesreasonid as int)       as sales_reason_id,
+    cast(name as string)             as sales_reason_name,
+    cast(reasontype as string)       as reason_type,
+    cast(modifieddate as timestamp)  as modified_date
 from source
