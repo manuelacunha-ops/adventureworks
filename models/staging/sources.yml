@@ -19,3 +19,121 @@ sources:
       - name: salesreason
       - name: stateprovince
       - name: store
+
+models:
+  - name: stg_address
+    description: "cleaned address records from adventure works source"
+
+  - name: stg_countryregion
+    description: "cleaned country and region lookup table"
+
+  - name: stg_creditcard
+    description: "cleaned credit card records"
+    columns:
+      - name: credit_card_id
+        description: "primary key"
+        tests:
+          - unique
+          - not_null
+      - name: card_type
+        tests:
+          - not_null
+
+  - name: stg_customer
+    description: "cleaned customer records with dual identity (b2c/b2b)"
+    columns:
+      - name: customer_id
+        description: "primary key"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_person
+    description: "cleaned person (individual) records"
+
+  - name: stg_product
+    description: "cleaned product dimension records"
+    columns:
+      - name: product_id
+        description: "primary key"
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        tests:
+          - not_null
+
+  - name: stg_productcategory
+    description: "cleaned product category lookup table"
+
+  - name: stg_productsubcategory
+    description: "cleaned product subcategory lookup table"
+
+  - name: stg_salesorderdetail
+    description: "cleaned sales order line item records"
+    columns:
+      - name: sales_order_detail_id
+        description: "primary key"
+        tests:
+          - unique
+          - not_null
+      - name: sales_order_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_salesorderheader')
+                field: sales_order_id
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_product')
+                field: product_id
+      - name: order_qty
+        tests:
+          - not_null
+      - name: unit_price
+        tests:
+          - not_null
+      - name: line_total
+        tests:
+          - not_null
+
+  - name: stg_salesorderheader
+    description: "cleaned sales order header records"
+    columns:
+      - name: sales_order_id
+        description: "primary key"
+        tests:
+          - unique
+          - not_null
+      - name: order_date
+        tests:
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('stg_customer')
+                field: customer_id
+      - name: subtotal
+        tests:
+          - not_null
+      - name: total_due
+        tests:
+          - not_null
+
+  - name: stg_salesorderheadersalesreason
+    description: "bridge table linking sales orders to sales reasons"
+
+  - name: stg_salesreason
+    description: "cleaned sales reason lookup table"
+
+  - name: stg_stateprovince
+    description: "cleaned state and province lookup table"
+
+  - name: stg_store
+    description: "cleaned store (b2b reseller) records"
