@@ -2,7 +2,7 @@ version: 2
 
 models:
   - name: dim_date
-    description: "calendar dimension generated from sales order date range (2011-2014)"
+    description: "calendar dimension generated from dbt utils"
     columns:
       - name: date_key
         description: "surrogate key in yyyyMMdd format"
@@ -53,12 +53,14 @@ models:
         tests:
           - not_null
           - relationships:
-              arguments:
-                to: ref('dim_date')
-                field: date_key
+              to: ref('fact_sales')
+              field: sales_order_id
       - name: sales_reason_id
         tests:
           - not_null
+          - relationships:
+              to: ref('dim_salesreason')
+              field: sales_reason_id
 
   - name: fact_sales
     description: "sales fact table at line-item grain (one row per sales_order_detail_id). additive measures: order_qty, net_sales, gross_sales, discount_amount. semi-additive (do not sum): subtotal, tax_amt, freight, total_due"
