@@ -1,0 +1,117 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "calendar dimension generated from sales order date range (2011-2014)"
+    columns:
+      - name: date_key
+        description: "surrogate key in yyyyMMdd format"
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_product
+    description: "product dimension with category and subcategory hierarchy"
+    columns:
+      - name: product_id
+        description: "primary key"
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_customer
+    description: "customer dimension with dual identity (b2c individual vs b2b store)"
+    columns:
+      - name: customer_id
+        description: "primary key"
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_geography
+    description: "geography dimension with address, state province, and country hierarchy"
+    columns:
+      - name: address_id
+        description: "primary key"
+        tests:
+          - unique
+          - not_null
+
+  - name: dim_creditcard
+    description: "credit card dimension"
+    columns:
+      - name: credit_card_id
+        description: "primary key"
+        tests:
+          - unique
+          - not_null
+
+  - name: bridge_salesreason
+    description: "bridge table for many-to-many relationship between orders and sales reasons — 19.47% of orders have 2+ reasons, always pre-aggregate before joining to fact"
+    columns:
+      - name: sales_order_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: sales_reason_id
+        tests:
+          - not_null
+
+  - name: fact_sales
+    description: "sales fact table at line-item grain (one row per sales_order_detail_id). additive measures: order_qty, net_sales, gross_sales, discount_amount. semi-additive (do not sum): subtotal, tax_amt, freight, total_due"
+    columns:
+      - name: sales_order_detail_id
+        description: "primary key"
+        tests:
+          - unique
+          - not_null
+      - name: product_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_product')
+                field: product_id
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_customer')
+                field: customer_id
+      - name: order_date_key
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: ship_date_key
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: credit_card_id
+        tests:
+          - relationships:
+              arguments:
+                to: ref('dim_creditcard')
+                field: credit_card_id
+      - name: ship_to_address_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_geography')
+                field: address_id
+      - name: bill_to_address_id
+        tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_geography')
+                field: address_id
