@@ -3,12 +3,12 @@ with source as (
 )
 
 select
-    businessentityid as personid,
-    persontype,
+    businessentityid as person_id,
+    persontype as person_type,
     title,
-    firstname,
-    middlename,
-    lastname,
-    concat(coalesce(firstname, ''), ' ', coalesce(lastname, '')) as fullname,
-    emailpromotion
+    firstname as first_name,
+    middlename as middle_name,
+    lastname as last_name,
+    concat(coalesce(firstname, ''), ' ', coalesce(lastname, '')) as full_name,
+    emailpromotion as email_promotion
 from source

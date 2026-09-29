@@ -1,9 +1,10 @@
-with stg_creditcard as (
-    select * from {{ ref('stg_creditcard') }}
-)
+{{ config(materialized='table') }}
 
 select
-    creditcardid as credit_card_sk,
-    creditcardid,
-    cardtype
-from stg_creditcard
+    credit_card_id,
+    card_type,
+    card_number,
+    exp_month,
+    exp_year,
+    modified_date
+from {{ ref('stg_creditcard') }}
