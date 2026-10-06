@@ -144,3 +144,8 @@ models:
         description: "Métrica semi-aditiva: valor total do pedido. Repetido por linha (não somar diretamente)."
         data_tests:
           - not_null
+
+      - name: status_description
+        description: "Descrição textual do status do pedido (ex: Shipped, Cancelled). Derivada da coluna status."
+        data_tests:
+          - not_null
