@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: dim_address
+    description: "Dimensão de endereços com a hierarquia geográfica completa (logradouro, cidade, estado/província e país)."
+    columns:
+      - name: address_id
+        description: "Chave primária do endereço."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: address_line1
+        description: "Primeira linha do endereço (logradouro, número e complemento principal)."
+        data_tests:
+          - not_null
+
+      - name: address_line2
+        description: "Segunda linha do endereço (complemento adicional, bloco, apto, etc.)."
+
+      - name: city
+        description: "Nome da cidade."
+        data_tests:
+          - not_null
+
+      - name: postal_code
+        description: "Código postal ou CEP do endereço."
+
+      - name: state_province_id
+        description: "Chave estrangeira do estado ou província."
+
+      - name: state_province_name
+        description: "Nome do estado ou província associado ao endereço."
+
+      - name: country_region_code
+        description: "Código do país ou região (ex: 'US', 'BR')."
+
+      - name: country_name
+        description: "Nome do país ou região associado."
+
+      - name: modified_date
+        description: "Data da última atualização do registro na fonte de origem."

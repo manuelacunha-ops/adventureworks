@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: dim_creditcard
+    description: "Dimensão contendo os dados cadastrais e de validade dos cartões de crédito dos clientes."
+    columns:
+      - name: credit_card_id
+        description: "Chave primária do cartão de crédito."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: card_type
+        description: "Tipo ou bandeira do cartão de crédito (ex: Visa, SuperiorCard)."
+        data_tests:
+          - not_null
+
+      - name: card_number
+        description: "Número do cartão de crédito (mascarado ou armazenado conforme regras de conformidade/PCI-DSS)."
+
+      - name: exp_month
+        description: "Mês de expiração do cartão de crédito (1 a 12)."
+        data_tests:
+          - not_null
+
+      - name: exp_year
+        description: "Ano de expiração do cartão de crédito no formato YYYY."
+        data_tests:
+          - not_null
+
+      - name: modified_date
+        description: "Data de atualização do registro na fonte de origem."

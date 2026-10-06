@@ -1,0 +1,71 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "Dimensão de tempo/calendário contendo grão diário para suporte a análises temporais e cruzamentos nos marts."
+    columns:
+      - name: date_key
+        description: "Chave primária numérica da data no formato YYYYMMDD (ex: 20231225)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: date
+        description: "Data do calendário no formato de data (YYYY-MM-DD)."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: year
+        description: "Ano do calendário com 4 dígitos (ex: 2023)."
+        data_tests:
+          - not_null
+
+      - name: month_number
+        description: "Número do mês do ano (1 a 12)."
+        data_tests:
+          - not_null
+
+      - name: month_name
+        description: "Nome por extenso do mês (ex: January, February)."
+        data_tests:
+          - not_null
+
+      - name: quarter
+        description: "Trimestre do ano (1 a 4)."
+        data_tests:
+          - not_null
+
+      - name: day_of_week
+        description: "Dia da semana em formato numérico (1 a 7)."
+        data_tests:
+          - not_null
+
+      - name: day_of_month
+        description: "Dia do mês (1 a 31)."
+        data_tests:
+          - not_null
+
+      - name: day_of_year
+        description: "Dia do ano (1 a 366)."
+        data_tests:
+          - not_null
+
+      - name: week_of_year
+        description: "Número da semana do ano (1 a 53)."
+        data_tests:
+          - not_null
+
+      - name: day_type
+        description: "Identificador de tipo de dia ('Weekday' para dias úteis de segunda a sexta ou 'Weekend' para fins de semana)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'Weekday'
+                - 'Weekend'
+
+      - name: year_quarter
+        description: "Representação combinada de ano e trimestre (ex: '2023-Q1')."
+        data_tests:
+          - not_null

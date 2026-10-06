@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: dim_customer
+    description: "Dimensão de clientes consolidada, integrando dados de pessoas físicas (B2C) e lojas/empresas (B2B)."
+    columns:
+      - name: customer_id
+        description: "Chave primária do cliente no mart."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: person_id
+        description: "Chave estrangeira para a pessoa associada (presente em clientes B2C)."
+
+      - name: store_id
+        description: "Chave estrangeira para a loja/empresa associada (presente em clientes B2B)."
+
+      - name: territory_id
+        description: "Chave estrangeira referente ao território de vendas do cliente."
+
+      - name: account_number
+        description: "Código ou número de conta único do cliente."
+        data_tests:
+          - not_null
+
+      - name: customer_name
+        description: "Nome exibível do cliente. Retorna o nome completo para B2C, o nome da loja para B2B ou o ID do cliente como fallback."
+        data_tests:
+          - not_null
+
+      - name: customer_type
+        description: "Classificação da identidade do cliente baseada nas associações ativas (B2C, B2B, Both ou No identity)."
+        data_tests:
+          - not_null
+          - accepted_values:
+              values:
+                - 'B2C (Individual)'
+                - 'B2B (Store)'
+                - 'Both'
+                - 'No identity'
+
+      - name: first_name
+        description: "Primeiro nome da pessoa associada ao cliente (se aplicável)."
+
+      - name: last_name
+        description: "Sobrenome da pessoa associada ao cliente (se aplicável)."
+
+      - name: store_name
+        description: "Nome comercial da loja associada ao cliente (se aplicável)."
+
+      - name: modified_date
+        description: "Data da última atualização do registro no sistema de origem."
