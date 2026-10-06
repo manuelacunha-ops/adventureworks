@@ -1,0 +1,36 @@
+version: 2
+
+models:
+  - name: bridge_salesreason
+    description: >
+      Tabela ponte (bridge) para resolver o relacionamento muitos-para-muitos entre pedidos de venda e motivos de venda.
+      
+      ATENÇÃO: Aproximadamente 19.5% dos pedidos possuem 2 ou mais motivos. 
+      Fazer um JOIN direto desta tabela com a `fct_sales` causará multiplicação de linhas (fan-out). 
+      Sempre faça a pré-agregação (ex: listagg/string_agg dos motivos) antes de cruzar com a fato.
+    columns:
+      - name: sales_order_id
+        description: "Chave estrangeira do pedido de venda."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('fct_sales')
+              field: sales_order_id
+
+      - name: sales_reason_id
+        description: "Chave identificadora do motivo da venda."
+        data_tests:
+          - not_null
+
+      - name: sales_reason_name
+        description: "Nome ou descrição do motivo da venda (ex: 'Price', 'Manufacturer')."
+        data_tests:
+          - not_null
+
+      - name: reason_type
+        description: "Categoria ou tipo do motivo da venda (ex: 'Marketing', 'Other')."
+        data_tests:
+          - not_null
+
+      - name: modified_date
+        description: "Data da última atualização do registro no sistema de origem."

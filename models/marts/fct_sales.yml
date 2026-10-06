@@ -1,0 +1,146 @@
+version: 2
+
+models:
+  - name: fct_sales
+    description: "Tabela fato de vendas no grão de item de pedido (linha do pedido). Contém métricas aditivas por item e métricas semi-aditivas repetidas no nível do cabeçalho do pedido."
+    columns:
+      - name: sales_order_detail_id
+        description: "Chave primária do item da linha de pedido."
+        data_tests:
+          - unique
+          - not_null
+
+      - name: sales_order_id
+        description: "Chave do pedido de venda (dimensão degenerada no grão do pedido)."
+        data_tests:
+          - not_null
+
+      - name: sales_order_number
+        description: "Número único de acompanhamento do pedido de venda."
+        data_tests:
+          - not_null
+
+      - name: order_date_key
+        description: "Chave estrangeira referente à data do pedido na dim_date (formato YYYYMMDD)."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key
+
+      - name: ship_date_key
+        description: "Chave estrangeira referente à data de envio na dim_date (formato YYYYMMDD). Pode ser nula caso o pedido não tenha sido enviado."
+
+      - name: product_id
+        description: "Chave estrangeira do produto vendido."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_product')
+              field: product_id
+
+      - name: customer_id
+        description: "Chave estrangeira do cliente."
+        data_tests:
+          - not_null
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_id
+
+      - name: credit_card_id
+        description: "Chave estrangeira do cartão de crédito utilizado no pagamento (se aplicável)."
+        data_tests:
+          - relationships:
+              to: ref('dim_creditcard')
+              field: credit_card_id
+
+      - name: ship_to_address_id
+        description: "Chave estrangeira do endereço de entrega."
+        data_tests:
+          - relationships:
+              to: ref('dim_address')
+              field: address_id
+
+      - name: bill_to_address_id
+        description: "Chave estrangeira do endereço de cobrança."
+        data_tests:
+          - relationships:
+              to: ref('dim_address')
+              field: address_id
+
+      - name: status
+        description: "Código de status do pedido de venda (ex: 1 = Em processamento, 5 = Enviado)."
+        data_tests:
+          - not_null
+
+      - name: online_order_flag
+        description: "Flag indicando se o pedido foi realizado online (1) ou via canal direto/vendedor (0)."
+        data_tests:
+          - not_null
+
+      - name: order_date
+        description: "Data e hora exata de realização do pedido."
+        data_tests:
+          - not_null
+
+      - name: ship_date
+        description: "Data e hora do envio do pedido."
+
+      - name: due_date
+        description: "Data limite para pagamento do pedido."
+
+      - name: sales_person_id
+        description: "Chave estrangeira do vendedor responsável (nulo para pedidos efetuados online)."
+
+      - name: territory_id
+        description: "Chave estrangeira do território de vendas."
+
+      - name: order_qty
+        description: "Métrica aditiva: quantidade de unidades vendidas do produto nesta linha."
+        data_tests:
+          - not_null
+
+      - name: unit_price
+        description: "Preço de venda unitário do produto nesta linha."
+        data_tests:
+          - not_null
+
+      - name: unit_price_discount
+        description: "Percentual de desconto aplicado sobre a unidade."
+        data_tests:
+          - not_null
+
+      - name: net_sales
+        description: "Métrica aditiva: valor líquido total da linha do pedido após descontos (line_total)."
+        data_tests:
+          - not_null
+
+      - name: gross_sales
+        description: "Métrica aditiva: valor bruto total da linha do pedido (unit_price * order_qty)."
+        data_tests:
+          - not_null
+
+      - name: discount_amount
+        description: "Métrica aditiva: valor total monetário de desconto nesta linha."
+        data_tests:
+          - not_null
+
+      - name: subtotal
+        description: "Métrica semi-aditiva: valor do subtotal do pedido. Repetido em cada linha do mesmo pedido (não somar diretamente entre linhas)."
+        data_tests:
+          - not_null
+
+      - name: tax_amt
+        description: "Métrica semi-aditiva: valor total de impostos do pedido. Repetido por linha (não somar diretamente)."
+        data_tests:
+          - not_null
+
+      - name: freight
+        description: "Métrica semi-aditiva: valor total do frete do pedido. Repetido por linha (não somar diretamente)."
+        data_tests:
+          - not_null
+
+      - name: total_due
+        description: "Métrica semi-aditiva: valor total do pedido. Repetido por linha (não somar diretamente)."
+        data_tests:
+          - not_null
