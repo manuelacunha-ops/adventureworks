@@ -16,7 +16,7 @@ select
     case
         when c.person_id is not null and c.store_id is null then 'B2C (Individual)'
         when c.store_id is not null and c.person_id is null then 'B2B (Store)'
-        when c.person_id is not null and c.store_id is not null then 'Both'
+        when c.person_id is not null and c.store_id is not null then 'B2B (Store)'
         else 'No identity'
     end as customer_type,
     pe.first_name,
